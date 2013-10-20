@@ -3,11 +3,10 @@ It's a simple php/jquery library providing easy ajax integration on both client 
 
 This repository is a fork of [spantaleev/Sijax](http://github.com/spantaleev/sijax) with the following changes:
 - The dependency on the `Core_Loader` is removed (you should load manually or use your own autoloader)
-- Removed the `Suggest` and `Upload` plugins (rather use jquery plugins with sijax backend)
+- Removed the `Suggest` and `Upload` plugins (rather use jquery plugins with sijax backend, see examples)
 - The comet plugin is kept as is
-- The [json2.js](http://github.com/douglascrockford/JSON-js/blob/master/json2.js) is updated
-- New examples
-- New README
+- The [json2.js](http://github.com/douglascrockford/JSON-js/blob/master/json2.js) is updated and minified
+- New examples (work in progress)
 - Supports multiple server side uri's
 
 There are sample files in `examples/` that demonstrate how it can be used.
@@ -18,7 +17,7 @@ Sijax lets you register any function (simple functions, public class method, obj
 
     Sijax.request('myFunction', 'uri', ['argument 1', 15.84]);
 
-Where uri is the url to the server side script.
+Where `myFunction` is the server side function to call, `uri` is the url to the server side script containing the function and `['argument 1', 15.84]` is the arguments to pass to `myFunction`.
 
 Ajax support is provided by [jQuery](http://jquery.com/) at the low-level. Sijax only handles dispatching the correct registered function on the server, and interpreting the response.
 
