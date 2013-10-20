@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the main Sijax class that takes care of,
+ * This is the main Sijax class that takes care of
  * registering callable functions, processing incoming data and dispatching calls.
  * 
  * @author Einar Huseby <https://github.com/ehu>
@@ -368,6 +368,40 @@ final class Sijax {
 	}
 	
 	/**
+	 * Parses sijax_args to javascript notation
+	 *
+	 * @param array mixed $args ('key' => 'value' etc in sijax only the placement of the value is required!)
+	 */
+	public static function generateJSParam($args) {
+	
+		$sijax_args = '["';
+	
+		if (is_array ( $args ) && count ( $args ) > 0) {
+				
+			$arg_arr = array();
+				
+			foreach ($args AS $key => $val) {
+	
+				if(is_numeric($val)) $arg_arr[] = $val;
+				elseif(is_bool($val)) {
+					($val) ? $arg_arr[] = 'true' : $arg_arr[] = 'false';
+				}
+				else $arg_arr[] = $val;
+			}
+				
+			$sijax_args .= implode('","', $arg_arr);
+		}
+		elseif (is_array ( $args ) && count ( $args ) == 0) {
+			$sijax_args .= '';
+		}
+		else
+			$sijax_args .= $args;
+	
+		$sijax_args .= '"]';
+		return $sijax_args;
+	}
+	
+	/**
 	 * Helper: Remove the output buffer
 	 *
 	 * Loops all levels of buffer with ob_end_clean
@@ -433,7 +467,7 @@ final class Sijax {
 	 *        	click, hover etc
 	 * @return string $string javascript sijax function call
 	 */
-	public static function sijaunction($method, $url, $selector, $param = array(), $script = NULL, $event = 'click', $dom = 'document') {
+	public static function sijaxFunction($method, $url, $selector, $param = array(), $script = NULL, $event = 'click', $dom = 'document') {
 		$string = "\$({$dom}).on('{$event}','{$selector}', function() {";
 		
 		if (isset ( $script ))
@@ -449,37 +483,27 @@ final class Sijax {
 	}
 	
 	/**
-	 * Parses sijax_args to javascript notation
+	 * Generating a new event handler for a sijaxFunction already in place
 	 *
-	 * @param array mixed $args ('key' => 'value' etc in sijax only the placement of the value is required!)
+	 * @param string $method
+	 * @param string $url
+	 * @param string $selector
+	 * @param array $args
+	 * @return string $string javascript
 	 */
-	public static function generateJSParam($args) {
-		
-		$sijax_args = '["';
-		
-		if (is_array ( $args ) && count ( $args ) > 0) {
-			
-			$arg_arr = array();
-			
-			foreach ($args AS $key => $val) {
-				
-				if(is_numeric($val)) $arg_arr[] = $val;
-				elseif(is_bool($val)) {
-					($val) ? $arg_arr[] = 'true' : $arg_arr[] = 'false';
-				}
-				else $arg_arr[] = $val;
-			}
-			
-			$sijax_args .= implode('","', $arg_arr);
-		}
-		elseif (is_array ( $args ) && count ( $args ) == 0) {
-			$sijax_args .= '';
-		}
-		else
-			$sijax_args .= $args;
-		
-		$sijax_args .= '"]';
-		return $sijax_args;
+	public static function sijaxFunctionReBind($method, $url, $selector, $args = array()) {
+		$string = "$('{$selector}').unbind('click').click(function() {";
+	
+		$string .= "Sijax.request('{$method}','{$url}'";
+	
+		$string .= "," . self::generateJSParam ( $args );
+	
+		$string .= ");";
+	
+		$string .= "return false;";
+		$string .= "});\n";
+	
+		return $string;
 	}
 	
 	/**
@@ -508,7 +532,7 @@ final class Sijax {
 	 * @param varchar $event        	
 	 * @return string $string javascript
 	 */
-	public static function sijaunctionFormValues($method, $url, $selector, $form_selector, $script = NULL, $event = 'click', $dom = 'document') {
+	public static function sijaxFunctionFormValues($method, $url, $selector, $form_selector, $script = NULL, $event = 'click', $dom = 'document') {
 		
 		$string = "\$({$dom}).on('{$event}','{$selector}', function() {";
 		
@@ -532,7 +556,7 @@ final class Sijax {
 	}
 	
 	/**
-	 * Decodes formdata from sijaunctionFormValues()
+	 * Decodes formdata from sijaxFunctionFormValues()
 	 *
 	 * @param string $formdata
 	 *        	json form data
@@ -542,29 +566,7 @@ final class Sijax {
 		return json_decode ( $formdata );
 	}
 	
-	/**
-	 * Generating a new event handler for a sijaunction already in place
-	 *
-	 * @param string $method        	
-	 * @param string $url        	
-	 * @param string $selector        	
-	 * @param array $args        	
-	 * @return string $string javascript
-	 */
-	public static function sijaunctionReBind($method, $url, $selector, $args = array()) {
-		$string = "$('{$selector}').unbind('click').click(function() {";
-		
-		$string .= "Sijax.request('{$method}','{$url}'";
-		
-		$string .= "," . self::generateJSParam ( $args );
-		
-		$string .= ");";
-		
-		$string .= "return false;";
-		$string .= "});\n";
-		
-		return $string;
-	}
+
 	
 } //End class
 
