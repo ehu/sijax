@@ -1,6 +1,6 @@
 var sjxComet = {};
 
-sjxComet.request = function (functionName, callArgs) {
+sjxComet.request = function (functionName, uri, callArgs) {
 	if (callArgs === undefined) {
 		callArgs = [];
 	}
@@ -18,7 +18,7 @@ sjxComet.request = function (functionName, callArgs) {
 	form.setAttribute('id', formId);
 	form.setAttribute('name', formId);
 	form.setAttribute('method', 'post');
-	form.setAttribute('action', Sijax.getRequestUri());
+	form.setAttribute('action', uri);
 	form.setAttribute('target', frameId);
 
 	jQuery('body').append(iframe);

@@ -1,5 +1,6 @@
 var Sijax = {};
 
+//NB: this must be the same on server side!
 Sijax.PARAM_REQUEST = 'sijax_rq';
 Sijax.PARAM_ARGS = 'sijax_args';
 
@@ -46,6 +47,7 @@ Sijax.process_html = function (params) {
 	}
 };
 
+
 Sijax.process_attr = function (params) {
 	var $obj = jQuery(params.selector),
         value,
@@ -78,7 +80,7 @@ Sijax.process_call = function (params) {
 	callback.apply(null, params.params);
 };
 
-Sijax.request = function (functionName, callArgs, requestParams) {
+Sijax.request = function (functionName, url, callArgs, requestParams) { //EH: added url!!
 	if (! callArgs) {
 		callArgs = [];
 	}
@@ -92,17 +94,26 @@ Sijax.request = function (functionName, callArgs, requestParams) {
 	data[Sijax.PARAM_REQUEST] = functionName;
 	data[Sijax.PARAM_ARGS] = JSON.stringify(callArgs);
 
+	console.log(data);
+	/**
+	 * This is the Ajax call
+	 * The request has two param:
+	 * sijax_rq (the method/function)
+	 * sijax_args (the arguments as array json)
+	 */
+
 	defaultRequestParams = {
-		"url": Sijax.requestUri,
-		"type": "POST",
-		"data": data,
-		"cache": false,
+		"url": 		url, 	//Sijax.requestUri,
+		"type": 	"POST", 
+		"data": 	data, 	//Data sent to backend
+		"cache": 	false,
 		"dataType": "json",
-		"success": Sijax.processCommands
+		"success": 	Sijax.processCommands
 	};
 
 	jQuery.ajax(jQuery.extend(defaultRequestParams, requestParams));
 };
+
 
 Sijax.getFormValues = function (formSelector) {
 	var values = {};
@@ -167,3 +178,5 @@ Sijax.getFormValues = function (formSelector) {
 
 	return values;
 };
+
+
