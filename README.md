@@ -25,7 +25,7 @@ Ajax support is provided by [jQuery](http://jquery.com/) at the low-level. Sijax
 A registered function may be referred to as response function. It gets triggered with a javascript call, and receives a `Response object` as its first argument. By calling different methods on the `Response object` the response function talks back to the browser.
 Here's how the myFunction implementation on server side might look on the PHP side:
 
-    function myFunction(Core_Sijax_Response $objResponse, $message, $double) {
+    function myFunction(SijaxResponse $objResponse, $message, $double) {
         $objResponse->alert('Argument 1: ' . $message);
     }
 
