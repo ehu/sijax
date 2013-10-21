@@ -108,6 +108,7 @@ Sijax.request = function (functionName, url, callArgs, requestParams) { //EH: ad
 		"data": 	data, 	//Data sent to backend
 		"cache": 	false,
 		"dataType": "json",
+		"async":	"true", //Do async!
 		"success": 	Sijax.processCommands
 	};
 
