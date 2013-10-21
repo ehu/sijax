@@ -8,6 +8,7 @@ This repository is a fork of [spantaleev/Sijax](http://github.com/spantaleev/sij
 - The [json2.js](http://github.com/douglascrockford/JSON-js/blob/master/json2.js) is updated and minified
 - New examples (work in progress)
 - Supports multiple server side uri's
+- Added some helpers both client side and server side
 
 There are sample files in `examples/` that demonstrate how it can be used.
 
@@ -40,6 +41,11 @@ Once the response function exits, the `queued commands` (like `alert()`, or any 
 - `Sijax::sijaxPopulatePostData($sijax_rq, $args)` - adds post data to the Sijax.request (useful when using Sijax request as data source in jquery plugins)
 
 These helpers can also be utilized on server side with the $objResponse->script() response since they are generating javascript
+
+## Server side helpers ##
+
+- `Sijax::cleanBuffer()` - recursive deleting of all output buffers
+- `Sijax::stopProcessing()` - a wrapper around `exit()`
 
 ## Available response functions ##
 
@@ -110,6 +116,18 @@ Comet streaming is supportet via the comet plugin. `See examples/comet/` for mor
 
 This is a very simple implementation (using a hidden iframe), and it works in all major browsers and that's probably all that's needed for simple streaming usage.
 
+## Note on multiple requests ##
+
+In php sessions are written to files. If you start a session with `session_start()` the script will block the session file until it returns or you explicit call `session_write_close()`.
+
+So if you are using multiple sijax requests (jquery.ajax()) the first reqest will block the others until it returns, the second request will block the rest until it returns etc. The response will be as if it was sequential. This is a php limitation, not Sijax or jquery.
+
+The use of php `session_` functions are important if you need multiple requests on the same page and if you are doing comet streaming.
 
 ## Examples ##
 
+Example 1: Collection of simple Sijax requests using pure javascript and using the `Sijax::sijaxRequest` and `Sijax::sijaxFunction`
+
+Example 2: Simple Sijax chat demonstrating how to fetch form values with `Sijax::getFormValues`
+
+Example 3: Comet streaming with cancel, also demonstrates the importance of controlling the php session 
