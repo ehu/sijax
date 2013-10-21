@@ -1,6 +1,6 @@
-var sijaxComet = {};
+var SijaxComet = {};
 
-sijaxComet.request = function (functionName, uri, callArgs) {
+SijaxComet.request = function (functionName, uri, callArgs) {
 	if (callArgs === undefined) {
 		callArgs = [];
 	}

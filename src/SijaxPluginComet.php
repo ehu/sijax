@@ -6,6 +6,7 @@
  * @author Slavi Pantaleev <https://github.com/spantaleev>
  * @license BSD, see BSD-LICENSE.txt
  */
+
 final class SijaxPluginComet {
 	
 	/**
@@ -25,7 +26,7 @@ final class SijaxPluginComet {
 	
 	public static function cometRequest($method, $url, $param = array()) {
 		
-		$out = "sjxComet.request('{$method}','{$url}', ";
+		$out = "SijaxComet.request('{$method}','{$url}', ";
 		$out .= Sijax::generateJSParam($param);
 		$out .= ");";
 		
@@ -43,14 +44,14 @@ final class SijaxPluginComet {
 	 * @param unknown_type $bind        	
 	 * @return string
 	 */
-	public static function cometFunction($method, $url, $selector, $param = array(), $script = NULL, $event = 'click') {
+	public static function cometFunction($method, $url, $selector, $param = array(), $script = NULL, $event = 'click', $dom = 'document') {
 		
-		$out = "\$('{$selector}').bind('{$event}', function() {";
+		$out = "\$({$dom}).on('{$event}','{$selector}', function() {";
 		
 		if (isset($script))
 			$out .= $script;
 		
-		$out .= "sjxComet.request('{$method}','{$url}', ";
+		$out .= "SijaxComet.request('{$method}','{$url}', ";
 		
 		$out .= Sijax::generateJSParam($param);
 		
@@ -59,7 +60,8 @@ final class SijaxPluginComet {
 		$out .= "});\n";
 		
 		return $out;
-	
+		
+		
 	}
 	
 	/**
@@ -74,7 +76,7 @@ final class SijaxPluginComet {
 		
 		$out = "$('{$selector}').unbind('click').click(function() {";
 		
-		$out .= "sjxComet.request('{$method}','{$url}', ";
+		$out .= "SijaxComet.request('{$method}','{$url}', ";
 		
 		$out .= Sijax::generateJSParam($param);
 		
