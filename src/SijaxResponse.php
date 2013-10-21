@@ -275,7 +275,7 @@ class SijaxResponse {
 	
 	/**
 	 * Returning raw json
-	 * We do not use the command processing on client side, just return a raw json object echoing json_encode
+	 * We do not use the command processing on client side, just return a raw json object
 	 *
 	 * @param mixed $data
 	 */
@@ -285,13 +285,15 @@ class SijaxResponse {
 		// Clean buffer
 		Sijax::cleanBuffer ();
 		
-		// Remove and set appropriate headers
+		// Remove headers
 		header_remove ();
+		
+		// Set headers for applocation/json 
 		header ( 'Cache-Control: no-cache, must-revalidate' );
 		header ( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' );
 		header ( 'Content-Type: application/json' );
 		
-		// Since we are outputting raw json, just echo!
+		// Since we are outputting raw json, just echo
 		echo json_encode ( $data );
 		
 		// Stop processing

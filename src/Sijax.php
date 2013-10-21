@@ -164,8 +164,7 @@ final class Sijax {
 				continue;
 			}
 			
-			$params [self::PARAM_CALLBACK] = array ($object,$methodName 
-			);
+			$params [self::PARAM_CALLBACK] = array ($object,$methodName );
 			
 			self::$_registeredMethods [$methodName] = $params;
 		}
@@ -183,6 +182,7 @@ final class Sijax {
 	 * @param array $params        	
 	 */
 	public static function registerCallback($functionName, $callback, $params = array()) {
+		
 		$params [self::PARAM_CALLBACK] = $callback;
 		
 		self::$_registeredMethods [$functionName] = $params;
@@ -200,6 +200,7 @@ final class Sijax {
 	 * @param array $params        	
 	 */
 	public static function executeCallback($callback = null, $args = array(), $params = array()) {
+		
 		if (isset ( $params [self::PARAM_RESPONSE_CLASS] )) {
 			$responseClass = $params [self::PARAM_RESPONSE_CLASS];
 		} else {
@@ -229,6 +230,7 @@ final class Sijax {
 	 * In case no custom event handler is specified, the default one is triggered (_invalidRequestCallback).
 	 */
 	public static function processRequest() {
+		
 		if (! self::isSijaxRequest ()) {
 			return;
 		}
@@ -246,8 +248,7 @@ final class Sijax {
 			if (self::hasEvent ( self::EVENT_INVALID_REQUEST )) {
 				$callback = self::$_events [self::EVENT_INVALID_REQUEST];
 			} else {
-				$callback = array (__CLASS__,'invalidRequestCallback' 
-				);
+				$callback = array (__CLASS__,'_invalidRequestCallback');
 			}
 			
 			$args = array ($requestFunction 
@@ -256,6 +257,7 @@ final class Sijax {
 		
 		self::executeCallback ( $callback, $args, $params );
 	}
+	
 	private static function _invalidRequestCallback(SijaxResponse $objResponse, $functionName) {
 		$objResponse->alert ( 'The action you performed is currently unavailable! (Sijax error)' );
 	}
@@ -282,8 +284,7 @@ final class Sijax {
 			$requestArgs = $objResponse->getRequestArgs ();
 		}
 		
-		$args = array_merge ( array ($objResponse 
-		), $requestArgs );
+		$args = array_merge ( array ($objResponse), $requestArgs );
 		
 		call_user_func_array ( $callback, $args );
 	}
@@ -349,7 +350,7 @@ final class Sijax {
 	 * Sijax.setRequestUri("\/index.php?page=main");
 	 * Sijax.setJsonUri("\/var\/www\/localhost\/htdocs\/svn\/siteengine\/testbin\/Sijax\/js\/json2.js");
 	 *
-	 * @deprecated this is handeled by asset manager or direct inclusion of files
+	 * @deprecated this is handled by direct inclusion of files or an asset manager
 	 *            
 	 * @return mixed $script
 	 */
@@ -369,8 +370,11 @@ final class Sijax {
 	
 	/**
 	 * Parses sijax_args to javascript notation
+	 * 
+	 * Note that it do not take attention to your keys, only the index of the values in the array.
+	 * The index of the value must correspond with the index of arguments in the called function
 	 *
-	 * @param array mixed $args ('key' => 'value' etc in sijax only the placement of the value is required!)
+	 * @param array mixed $args ('key' => 'value' etc in sijax only the value is required!)
 	 */
 	public static function generateJSParam($args) {
 	
