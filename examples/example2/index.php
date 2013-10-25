@@ -59,7 +59,7 @@ include_once '../autoloader.php';
 <!-- START CONTENT -->
 <body>
 <div class="page-header">
-  <h1>Sijax Example 1 <small>Simple chat example</small></h1>
+  <h1>Sijax Example 2 <small>Simple chat example</small></h1>
 </div>
 
 <p>This is a simple example of sending the value of the input to serverside, then appending ($objResponse->htmlAppend) to the html already present in the textbox.</p>
